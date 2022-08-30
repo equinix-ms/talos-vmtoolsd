@@ -22,9 +22,10 @@ package nanotoolbox
 import (
 	"bytes"
 	"fmt"
-	"github.com/sirupsen/logrus"
 	"sync"
 	"time"
+
+	"github.com/sirupsen/logrus"
 )
 
 const (
@@ -219,11 +220,13 @@ func (s *Service) Dispatch(request []byte) []byte {
 	name = bytes.TrimRight(name, "\x00")
 	l := s.Log.WithField("handler_name", name)
 
+	l.Debug("incoming RPC request")
+
 	handler, ok := s.commandHandlers[string(name)]
 
 	if !ok {
 		l.Debug("unknown command")
-		return []byte("Unknown Command")
+		return []byte("ERR Unknown Command")
 	}
 
 	var args []byte
